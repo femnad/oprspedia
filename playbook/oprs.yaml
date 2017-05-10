@@ -1,0 +1,12 @@
+---
+- hosts: oprs
+
+  vars:
+    deps:
+      apt:
+        - ruby-erubis
+        - ruby-nokogiri
+        - ruby-sinatra
+
+  roles:
+    - packages

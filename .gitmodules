@@ -1,0 +1,3 @@
+[submodule "playbook/roles"]
+	path = playbook/roles
+	url = git@github.com:femnad/roles.git
