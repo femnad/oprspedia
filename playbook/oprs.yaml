@@ -1,8 +1,8 @@
 ---
-- hosts: oprs
+- include:
+    install-immortal.yaml
 
-  vars_files:
-    - vars/paths.yaml
+- hosts: oprs
 
   vars:
     deps:
@@ -10,12 +10,9 @@
         - ruby-erubis
         - ruby-nokogiri
         - ruby-sinatra
-
     repo:
       url:
-        https://github.com/immortal/immortal.git
-
+        https://github.com/femnad/oprspedia.git
 
   roles:
-    - packages
-    - source_install
+    - clone

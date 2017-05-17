@@ -1,0 +1,40 @@
+---
+- hosts: oprs
+
+  vars_files:
+    - vars/paths.yaml
+
+  vars:
+    _clone_dest:
+      "{{ gopath }}/src/github.com/immortal/immortal"
+    repo:
+      url:
+        https://github.com/immortal/immortal.git
+      dest:
+        "{{ _clone_dest }}"
+
+  roles:
+    - clone
+
+  post_tasks:
+    - name:
+        Build immortal
+      command:
+        make
+      args:
+        chdir:
+          "{{ _clone_dest }}"
+      environment:
+        GOPATH:
+          "{{ gopath }}"
+
+    - name:
+        Install immortal
+      command:
+        make install DESTDIR={{ user_home }}
+      args:
+        chdir:
+          "{{ _clone_dest }}"
+      environment:
+        GOPATH:
+          "{{ gopath }}"
