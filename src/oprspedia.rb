@@ -5,6 +5,7 @@ require 'sinatra'
 
 set :bind => "<private-ip>"
 set :port => "<bind-port>"
+set :show_exceptions => false
 
 BASE_URL = "https://en.wikipedia.org/wiki"
 
