@@ -1,6 +1,9 @@
 ---
 - hosts: oprs
 
+  vars_files:
+    - vars/paths.yaml
+
   vars:
     deps:
       apt:
@@ -8,5 +11,11 @@
         - ruby-nokogiri
         - ruby-sinatra
 
+    repo:
+      url:
+        https://github.com/immortal/immortal.git
+
+
   roles:
     - packages
+    - source_install
