@@ -1,6 +1,6 @@
 [submodule "playbook/roles"]
 	path = playbook/roles
-	url = git@github.com:femnad/roles.git
+	url = https://github.com:femnad/roles.git
 [submodule "playbook/vars"]
 	path = playbook/vars
-	url = git@github.com:femnad/vars.git
+	url = https://github.com:femnad/vars.git

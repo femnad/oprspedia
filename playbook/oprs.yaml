@@ -1,8 +1,15 @@
 ---
 - include:
     install-immortal.yaml
+  tags:
+    immortal
 
 - hosts: oprs
+
+  name: Install oprspedia
+
+  vars_files:
+    - vars/paths.yaml
 
   vars:
     deps:

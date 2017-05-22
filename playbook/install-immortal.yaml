@@ -1,6 +1,8 @@
 ---
 - hosts: oprs
 
+  name: Install immortal
+
   vars_files:
     - vars/paths.yaml
 
