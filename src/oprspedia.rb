@@ -26,6 +26,17 @@ def get_article_content(article_name)
     content.read
 end
 
+def get_module_query_string(params)
+  "debug=#{params['debug']}&lang=#{params['lang']}&modules=#{params['modules']}&only=#{params['only']}&skin=#{params['skin']}"
+end
+
+def load_module(module_params)
+  query_string = get_module_query_string(module_params)
+  module_link = "#{BASE_URL}/w/load.php?#{query_string}"
+  module_content = open(module_link)
+  module_content.read
+end
+
 get '/wiki/:article' do
   article_name = params['article']
   erb get_article_content(article_name)
@@ -34,4 +45,9 @@ end
 get '/static/favicon/:icon_file' do
   favicon_file = params['icon_file']
   get_favicon_file(favicon_file)
+end
+
+get '/w/load.php' do
+  content_type "text/css"
+  load_module(params)
 end
