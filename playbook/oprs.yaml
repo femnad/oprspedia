@@ -42,13 +42,13 @@
     - clone
 
   post_tasks:
-    - lineinfile:
+    - replace:
         path:
           "{{ source.path }}/run/run.yaml"
         regexp:
-          cwd: <source_dir>
+          <source_dir>
         line:
-          "cwd: {{ source.path }}/src"
+          "{{ source.path }}/src"
     - replace:
         path:
           "{{ source.path }}/src/oprspedia.rb"
