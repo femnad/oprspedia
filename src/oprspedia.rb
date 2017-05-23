@@ -37,6 +37,12 @@ def load_module(module_params)
   module_content.read
 end
 
+def load_image_file(image_file)
+  image_link = "#{BASE_URL}/static/images/#{image_file}"
+  image_content = open(image_link)
+  image_content.read
+end
+
 get '/wiki/:article' do
   article_name = params['article']
   erb get_article_content(article_name)
@@ -50,4 +56,14 @@ end
 get '/w/load.php' do
   content_type "text/css"
   load_module(params)
+end
+
+get '/static/images/:image_file' do
+  image_file = params['image_file']
+  load_image_file(image_file)
+end
+
+get '/static/images/*/:image_file' do
+  image_file = params['captures'].join('/')
+  load_image_file(image_file)
 end
