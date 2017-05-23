@@ -42,14 +42,16 @@
     - clone
 
   post_tasks:
-    - replace:
+    - name: Setup run.yaml for immortal
+      replace:
         path:
           "{{ source.path }}/run/run.yaml"
         regexp:
           <source_dir>
-        line:
+        replace:
           "{{ source.path }}/src"
-    - replace:
+    - name: Set IP and port for Sinatra
+      replace:
         path:
           "{{ source.path }}/src/oprspedia.rb"
         regexp:
