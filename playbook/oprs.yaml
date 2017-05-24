@@ -45,7 +45,7 @@
     - name: Setup run.yaml for immortal
       replace:
         path:
-          "{{ source.path }}/run/run.yaml"
+          "{{ source.path }}/run/oprs.yml"
         regexp:
           <source_dir>
         replace:
