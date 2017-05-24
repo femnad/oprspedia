@@ -4,7 +4,7 @@
   tags:
     immortal
 
-- hosts: oprs
+- hosts: all
 
   name: Install oprspedia
 
@@ -39,7 +39,7 @@
         3333
 
   roles:
-    - clone
+    - { role: clone, tags: sinatra }
 
   post_tasks:
     - name: Setup run.yaml for immortal
@@ -63,3 +63,5 @@
           "{{ settings.ip }}"
         "<bind-port>":
           "{{ settings.port }}"
+      tags:
+        sinatra
