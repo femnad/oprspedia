@@ -81,7 +81,7 @@ end
 
 get '/w/load.php' do
   content_type "text/css"
-  mobile_requested = request.host.equal?(MOBILE_HOSTNAME)
+  mobile_requested = request.host.eql?(MOBILE_HOSTNAME)
   final_params = optionally_update_for_mobile(params, mobile_requested)
   load_module(final_params)
 end
