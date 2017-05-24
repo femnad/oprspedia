@@ -2,12 +2,16 @@ require 'erubis'
 require 'nokogiri'
 require 'open-uri'
 require 'sinatra'
+require 'set'
 
 set :bind => "<private-ip>"
 set :port => "<bind-port>"
 set :show_exceptions => false
 
 BASE_URL = "https://en.wikipedia.org"
+EXPECTED_MODULE_PARAMS = Set.new ["debug", "lang", "modules", "only", "skin"]
+MOBILE_HOSTNAME = "en.m.oprspedia.org"
+MOBILE_PREFERENCE_PAIR = {"target" => "mobile"}
 WIKI_URL = "#{BASE_URL}/wiki"
 
 def get_favicon_path(icon_file)
@@ -26,8 +30,18 @@ def get_article_content(article_name)
     content.read
 end
 
+def params_to_query_string(params)
+  as_pairs = params.to_a.map{ |kv|
+    "#{kv.first}=#{kv.last}"
+  }
+  as_pairs.join('&')
+end
+
 def get_module_query_string(params)
-  "debug=#{params['debug']}&lang=#{params['lang']}&modules=#{params['modules']}&only=#{params['only']}&skin=#{params['skin']}"
+  params.keep_if{ |k, v|
+    EXPECTED_MODULE_PARAMS.include?(k)
+  }
+  params_to_query_string(params)
 end
 
 def load_module(module_params)
@@ -48,6 +62,10 @@ get '/wiki/:article' do
   erb get_article_content(article_name)
 end
 
+def set_mobile_preference(params)
+  params.merge(MOBILE_PREFERENCE_PAIR)
+end
+
 get '/static/favicon/:icon_file' do
   favicon_file = params['icon_file']
   get_favicon_file(favicon_file)
@@ -55,6 +73,10 @@ end
 
 get '/w/load.php' do
   content_type "text/css"
+  mobile_requested = request.host.equal?(MOBILE_HOSTNAME)
+  if mobile_requested
+    params = set_mobile_preference(params)
+  end
   load_module(params)
 end
 
