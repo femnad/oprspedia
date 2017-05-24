@@ -66,6 +66,14 @@ def set_mobile_preference(params)
   params.merge(MOBILE_PREFERENCE_PAIR)
 end
 
+def optionally_update_for_mobile(params, mobile_requested)
+  if mobile_requested
+    return set_mobile_preference(params)
+  else
+    return params
+  end
+end
+
 get '/static/favicon/:icon_file' do
   favicon_file = params['icon_file']
   get_favicon_file(favicon_file)
@@ -74,10 +82,8 @@ end
 get '/w/load.php' do
   content_type "text/css"
   mobile_requested = request.host.equal?(MOBILE_HOSTNAME)
-  if mobile_requested
-    params = set_mobile_preference(params)
-  end
-  load_module(params)
+  final_params = optionally_update_for_mobile(params, mobile_requested)
+  load_module(final_params)
 end
 
 get '/static/images/:image_file' do
