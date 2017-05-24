@@ -9,7 +9,7 @@ set :port => "<bind-port>"
 set :show_exceptions => false
 
 BASE_URL = "https://en.wikipedia.org"
-EXPECTED_MODULE_PARAMS = Set.new ["debug", "lang", "modules", "only", "skin"]
+EXPECTED_MODULE_PARAMS = Set.new ["debug", "lang", "modules", "only", "skin", "target"]
 MOBILE_HOSTNAME = "en.m.oprspedia.org"
 MOBILE_PREFERENCE_PAIR = {"target" => "mobile"}
 WIKI_URL = "#{BASE_URL}/wiki"
