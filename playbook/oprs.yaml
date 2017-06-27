@@ -72,6 +72,14 @@
           "{{ user_service_dir }}/{{ service_file }}"
 
     - name:
+        Fill in rackup file
+      template:
+        src:
+          config.yaml.j2
+        dest:
+          "{{ local_var_dir }}/config.yaml"
+
+    - name:
         Start Oprspedia service
       systemd:
         name:
