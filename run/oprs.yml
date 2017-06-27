@@ -1,2 +1,4 @@
 cmd: ruby oprspedia.rb
 cwd: <source_dir>
+log:
+  file: ~/.oprspedia/oprspedia.log
