@@ -87,6 +87,6 @@
         daemon_reload:
           yes
         state:
-          started
+          restarted
         user:
           yes
