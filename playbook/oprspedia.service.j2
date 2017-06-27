@@ -1,0 +1,8 @@
+[Unit]
+Description=Oprspedia
+
+[Service]
+ExecStart=/usr/bin/ruby {{ source.path }}/src/oprspedia.rb
+
+[Install]
+WantedBy=multi-user.target

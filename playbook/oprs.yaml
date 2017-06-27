@@ -1,10 +1,5 @@
 ---
-- include:
-    install-immortal.yaml
-  tags:
-    immortal
-
-- hosts: all
+- hosts: oprs
 
   name: Install oprspedia
 
@@ -38,18 +33,31 @@
         3831353462346636360a376665313463376362656466396566376331613432323162626335373761
         3333
 
+    user_service_dir:
+      "{{ user_home }}/.config/systemd/user"
+    service_file:
+      oprspedia.service
+
   roles:
     - { role: clone, tags: sinatra }
 
   post_tasks:
-    - name: Setup run.yaml for immortal
-      replace:
+    - name:
+        Initialize user service directory
+      file:
         path:
-          "{{ source.path }}/run/oprs.yml"
-        regexp:
-          <source_dir>
-        replace:
-          "{{ source.path }}/src"
+          "{{ user_service_dir }}"
+        state:
+          directory
+
+    - name:
+        Fill in user service template
+      template:
+        src:
+          oprspedia.service.j2
+        dest:
+          "{{ user_service_dir }}/{{ service_file }}"
+
     - name: Set IP and port for Sinatra
       replace:
         path:
@@ -65,3 +73,15 @@
           "{{ settings.port }}"
       tags:
         sinatra
+
+    - name:
+        Start Oprspedia service
+      systemd:
+        name:
+          "{{ service_file }}"
+        daemon_reload:
+          yes
+        state:
+          started
+        user:
+          yes
