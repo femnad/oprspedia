@@ -12,6 +12,8 @@
         - ruby-erubis
         - ruby-nokogiri
         - ruby-sinatra
+        - thin
+
     repo:
       url:
         https://github.com/femnad/oprspedia.git
