@@ -1,6 +1,6 @@
 require 'erubis'
 require 'nokogiri'
-require 'open-uri'
+require 'net/http'
 require 'sinatra'
 require 'set'
 
@@ -16,16 +16,20 @@ def get_favicon_path(icon_file)
   "#{BASE_URL}/static/favicon/#{icon_file}"
 end
 
+def get_uri_content(uri_string)
+  uri = URI(uri_string)
+  Net::HTTP.get(uri)
+end
+
 def get_favicon_file(icon_file)
   favicon_path = get_favicon_path(icon_file)
-  icon_file = open(favicon_path)
-  icon_file.read
+  get_uri_content(favicon_path)
 end
 
 def get_article_content(article_name)
-    article_link = "#{WIKI_URL}/#{params['article']}"
-    content = open(article_link)
-    content.read
+  article_link = "#{WIKI_URL}/#{article_name}"
+  encoded_link = URI.encode(article_link)
+  get_uri_content(encoded_link)
 end
 
 def params_to_query_string(params)
@@ -45,14 +49,12 @@ end
 def load_module(module_params)
   query_string = get_module_query_string(module_params)
   module_link = "#{BASE_URL}/w/load.php?#{query_string}"
-  module_content = open(module_link)
-  module_content.read
+  get_uri_content(module_link)
 end
 
 def load_image_file(image_file)
   image_link = "#{BASE_URL}/static/images/#{image_file}"
-  image_content = open(image_link)
-  image_content.read
+  get_uri_content(image_link)
 end
 
 get '/wiki/:article' do
