@@ -48,7 +48,8 @@
       oprspedia.service
 
   roles:
-    - { role: clone, tags: sinatra }
+    - packages
+    - clone
 
   post_tasks:
     - name:
