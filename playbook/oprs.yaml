@@ -16,6 +16,9 @@
       url:
         https://github.com/femnad/oprspedia.git
 
+    local_var_dir:
+      "{{ user_home }}/.local/oprspedia"
+
     settings:
       port: !vault |
         $ANSIBLE_VAULT;1.1;AES256
@@ -32,6 +35,10 @@
         33646232363965646534343233383639663032316566336664653766363639326566326231353435
         3831353462346636360a376665313463376362656466396566376331613432323162626335373761
         3333
+      pidfile:
+        "{{ local_var_dir }}/oprspedia.pid"
+      logfile:
+        "{{ local_var_dir }}/oprspedia.log"
 
     user_service_dir:
       "{{ user_home }}/.config/systemd/user"
@@ -43,12 +50,15 @@
 
   post_tasks:
     - name:
-        Initialize user service directory
+        Initialize user directories
       file:
         path:
-          "{{ user_service_dir }}"
+          "{{ item }}"
         state:
           directory
+      with_items:
+        - "{{ user_service_dir }}"
+        - "{{ local_var_dir }}"
 
     - name:
         Fill in user service template
@@ -57,22 +67,6 @@
           oprspedia.service.j2
         dest:
           "{{ user_service_dir }}/{{ service_file }}"
-
-    - name: Set IP and port for Sinatra
-      replace:
-        path:
-          "{{ source.path }}/src/oprspedia.rb"
-        regexp:
-          "{{ item.key }}"
-        replace:
-          "{{ item.value }}"
-      with_dict:
-        "<private-ip>":
-          "{{ settings.ip }}"
-        "<bind-port>":
-          "{{ settings.port }}"
-      tags:
-        sinatra
 
     - name:
         Start Oprspedia service

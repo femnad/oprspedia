@@ -1,0 +1,7 @@
+---
+environment: production
+chdir: "{{ source.path }}/src"
+address: "{{ settings.ip }}"
+port: "{{ settings.port }}"
+pid: "{{ settings.pidfile }}"
+log: "{{ settings.logfile }}"

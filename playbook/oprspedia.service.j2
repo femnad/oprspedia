@@ -2,7 +2,8 @@
 Description=Oprspedia
 
 [Service]
-ExecStart=/usr/bin/ruby {{ source.path }}/src/oprspedia.rb
+PIDfile={{ settings.pidfile }}
+ExecStart=thin -C {{ source.path }}/src/oprspedia.ru -C {{ source.path }}/src/config.yaml start
 
 [Install]
 WantedBy=multi-user.target
