@@ -1,5 +1,4 @@
 require 'erubis'
-require 'nokogiri'
 require 'net/http'
 require 'sinatra'
 require 'set'
@@ -10,15 +9,34 @@ BASE_URL = "https://en.wikipedia.org"
 EXPECTED_MODULE_PARAMS = Set.new ["debug", "lang", "modules", "only", "skin", "target"]
 MOBILE_HOSTNAME = "en.m.oprspedia.org"
 MOBILE_PREFERENCE_PAIR = {"target" => "mobile"}
+REPLACEMENTS = {'upload.wikimedia.org' => 'upload.oprspedia.org'}
 WIKI_URL = "#{BASE_URL}/wiki"
+WIKIMEDIA_URI_PREFIX = 'https://upload.wikimedia.org/wikipedia'
 
 def get_favicon_path(icon_file)
   "#{BASE_URL}/static/favicon/#{icon_file}"
 end
 
+def perform_replacements(content)
+  replaced_content = String.new
+  REPLACEMENTS.each{ | pattern, replacement |
+    replaced_content = content.gsub(pattern, replacement)
+  }
+  return replaced_content
+end
+
+def perform_reverse_replacements(content)
+  original_content = String.new
+  REPLACEMENTS.each{ | pattern, replacement |
+    original_content = content.gsub(replacement, pattern)
+  }
+  return original_content
+end
+
 def get_uri_content(uri_string)
   uri = URI(uri_string)
-  Net::HTTP.get(uri)
+  unmodified_content = Net::HTTP.get(uri)
+  perform_replacements(unmodified_content)
 end
 
 def get_favicon_file(icon_file)
@@ -74,6 +92,10 @@ def optionally_update_for_mobile(params, mobile_requested)
   end
 end
 
+def get_wikimedia_content(path)
+  return get_uri_content("#{WIKIMEDIA_URI_PREFIX}/#{path}")
+end
+
 get '/static/favicon/:icon_file' do
   favicon_file = params['icon_file']
   get_favicon_file(favicon_file)
@@ -94,4 +116,9 @@ end
 get '/static/images/*/:image_file' do
   image_file = params['captures'].join('/')
   load_image_file(image_file)
+end
+
+get '/wikipedia/:path' do
+  path = params['path']
+  get_wikimedia_content(path)
 end
