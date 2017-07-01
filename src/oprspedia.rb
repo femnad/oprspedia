@@ -118,7 +118,7 @@ get '/static/images/*/:image_file' do
   load_image_file(image_file)
 end
 
-get '/wikipedia/:path' do
-  path = params['path']
+get '/wikipedia/*' do
+  path = params['captures'].join('/')
   get_wikimedia_content(path)
 end
