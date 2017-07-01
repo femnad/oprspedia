@@ -79,7 +79,7 @@
           "{{ local_var_dir }}/config.yaml"
 
     - name:
-        Start Oprspedia service
+        (Re)start Oprspedia service
       systemd:
         name:
           "{{ service_file }}"
@@ -89,3 +89,5 @@
           restarted
         user:
           yes
+      tags:
+        service
