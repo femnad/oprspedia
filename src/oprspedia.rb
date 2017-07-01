@@ -7,6 +7,7 @@ set :show_exceptions => false
 
 BASE_URL = "https://en.wikipedia.org"
 EXPECTED_MODULE_PARAMS = Set.new ["debug", "lang", "modules", "only", "skin", "target"]
+MAIN_PAGE_SUFFIX = '/wiki/Main_Page'
 MOBILE_HOSTNAME = "en.m.oprspedia.org"
 MOBILE_PREFERENCE_PAIR = {"target" => "mobile"}
 REPLACEMENTS = {'upload.wikimedia.org' => 'upload.oprspedia.org'}
@@ -75,11 +76,6 @@ def load_image_file(image_file)
   get_uri_content(image_link)
 end
 
-get '/wiki/:article' do
-  article_name = params['article']
-  erb get_article_content(article_name)
-end
-
 def set_mobile_preference(params)
   params.merge(MOBILE_PREFERENCE_PAIR)
 end
@@ -96,6 +92,14 @@ def get_wikimedia_content(path)
   return get_uri_content("#{WIKIMEDIA_URI_PREFIX}/#{path}")
 end
 
+get '/' do
+  redirect to(MAIN_PAGE_SUFFIX)
+end
+
+get '/wiki/:article' do
+  article_name = params['article']
+  erb get_article_content(article_name)
+end
 get '/static/favicon/:icon_file' do
   favicon_file = params['icon_file']
   get_favicon_file(favicon_file)
