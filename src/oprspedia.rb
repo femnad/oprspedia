@@ -11,6 +11,7 @@ MAIN_PAGE_SUFFIX = '/wiki/Main_Page'
 MOBILE_HOSTNAME = "en.m.oprspedia.org"
 MOBILE_PREFERENCE_PAIR = {"target" => "mobile"}
 REPLACEMENTS = {'upload.wikimedia.org' => 'upload.oprspedia.org'}
+SEARCH_URL = "https://en.wikipedia.org/w/index.php?"
 WIKI_URL = "#{BASE_URL}/wiki"
 WIKIMEDIA_URI_PREFIX = 'https://upload.wikimedia.org/wikipedia'
 
@@ -89,7 +90,11 @@ def optionally_update_for_mobile(params, mobile_requested)
 end
 
 def get_wikimedia_content(path)
-  return get_uri_content("#{WIKIMEDIA_URI_PREFIX}/#{path}")
+  get_uri_content("#{WIKIMEDIA_URI_PREFIX}/#{path}")
+end
+
+def get_search_response(query_string)
+  get_uri_content("#{SEARCH_URL}?#{query_string}")
 end
 
 get '/' do
@@ -100,6 +105,7 @@ get '/wiki/:article' do
   article_name = params['article']
   erb get_article_content(article_name)
 end
+
 get '/static/favicon/:icon_file' do
   favicon_file = params['icon_file']
   get_favicon_file(favicon_file)
@@ -125,4 +131,9 @@ end
 get '/wikipedia/*' do
   path = params['captures'].join('/')
   get_wikimedia_content(path)
+end
+
+get '/w/index.php' do
+  search_query = params_to_query_string(params)
+  get_search_response(search_query)
 end
