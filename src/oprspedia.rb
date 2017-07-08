@@ -36,7 +36,7 @@ def perform_reverse_replacements(content)
 end
 
 def get_uri_from_string(uri_string)
-  URI.encode(uri_string)
+  URI(URI.encode(uri_string))
 end
 
 def get_uri_content(uri_string)
