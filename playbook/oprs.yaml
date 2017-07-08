@@ -61,6 +61,8 @@
       with_items:
         - "{{ user_service_dir }}"
         - "{{ local_var_dir }}"
+      tags:
+        service
 
     - name:
         Fill in user service template
@@ -69,6 +71,8 @@
           oprspedia.service.j2
         dest:
           "{{ user_service_dir }}/{{ service_file }}"
+      tags:
+        service
 
     - name:
         Fill in config file
@@ -77,6 +81,8 @@
           config.yaml.j2
         dest:
           "{{ local_var_dir }}/config.yaml"
+      tags:
+        service
 
     - name:
         (Re)start Oprspedia service

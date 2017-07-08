@@ -2,9 +2,10 @@
 Description=Oprspedia
 
 [Service]
+ExecStart=/usr/bin/thin -R {{ source.path }}/src/oprspedia.ru -C {{ local_var_dir }}/config.yaml -l {{ local_var_dir }}/oprs.log -P {{ settings.pidfile }} -d start
 PIDFile={{ settings.pidfile }}
-ExecStart=/usr/bin/thin -R {{ source.path }}/src/oprspedia.ru -C {{ local_var_dir }}/config.yaml -l {{ local_var_dir }}/oprs.log -P {{ settings.pidfile }} start
 Restart=always
+Type=forking
 
 [Install]
 WantedBy=multi-user.target
