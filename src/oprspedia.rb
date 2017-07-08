@@ -35,8 +35,12 @@ def perform_reverse_replacements(content)
   return original_content
 end
 
+def get_uri_from_string(uri_string)
+  URI.encode(uri_string)
+end
+
 def get_uri_content(uri_string)
-  uri = URI(uri_string)
+  uri = get_uri_from_string(uri_string)
   unmodified_content = Net::HTTP.get(uri)
   perform_replacements(unmodified_content)
 end
@@ -47,9 +51,7 @@ def get_favicon_file(icon_file)
 end
 
 def get_article_content(article_name)
-  article_link = "#{WIKI_URL}/#{article_name}"
-  encoded_link = URI.encode(article_link)
-  get_uri_content(encoded_link)
+  get_uri_content("#{WIKI_URL}/#{article_name}")
 end
 
 def params_to_query_string(params)
