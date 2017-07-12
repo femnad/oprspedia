@@ -6,4 +6,4 @@
 	url = https://github.com/femnad/vars.git
 [submodule "playbook/group_vars"]
 	path = playbook/group_vars
-	url = git@github.com:femnad/group_vars.git
+	url = https://@github.com/femnad/group_vars.git

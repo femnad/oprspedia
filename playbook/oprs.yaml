@@ -21,9 +21,9 @@
         https://github.com/femnad/oprspedia.git
 
     settings:
-      port:
-        127.0.0.1
       ip:
+        127.0.0.1
+      port:
         4567
 
     user_service:

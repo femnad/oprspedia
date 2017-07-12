@@ -4,7 +4,7 @@
   name:
     Generate certificates
 
-  tasks:
+  vars:
     certbot_standalone:
       agree_tos:
         yes
