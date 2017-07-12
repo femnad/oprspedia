@@ -1,0 +1,17 @@
+---
+- hosts:
+    rhodium
+  name:
+    Configure HAProxy
+
+  vars:
+    haproxy_config:
+      base_domain:
+        oprspedia.org
+      backend_server:
+        127.0.0.1:4000
+      public_ip:
+        163.172.184.91
+
+  roles:
+    - haproxy_config

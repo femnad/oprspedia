@@ -62,6 +62,11 @@
         service
 
 - import_playbook:
-    oprs_certificate.yaml
+    generate_certificates.yaml
   tags:
-    certbot, haproxy
+    certbot
+
+- import_playbook:
+    configure_haproxy.yaml
+  tags:
+    haproxy
