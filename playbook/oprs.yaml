@@ -46,6 +46,7 @@
         src:
           config.yaml.j2
         dest:
+          "{{ config_file }}"
 
     - name:
         (Re)start Oprspedia service

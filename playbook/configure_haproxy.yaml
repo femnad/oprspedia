@@ -8,10 +8,10 @@
     haproxy_config:
       base_domain:
         oprspedia.org
-      backend_server:
-        127.0.0.1:4567
       public_ip:
         0.0.0.0
+      backend_server:
+        127.0.0.1:4567
 
   roles:
     - haproxy_config
