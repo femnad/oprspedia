@@ -1,14 +1,17 @@
 ---
-- hosts: oprs
+- hosts:
+    rhodium
 
   name: Install oprspedia
 
-  vars_files:
-    - vars/paths.yaml
-
   vars:
+    config_file:
+      "{{ user_home }}/.oprspedia-config.yaml"
+
     deps:
       apt:
+        - certbot
+        - haproxy
         - ruby-erubis
         - ruby-sinatra
         - thin
@@ -17,78 +20,38 @@
       url:
         https://github.com/femnad/oprspedia.git
 
-    local_var_dir:
-      "{{ user_home }}/.local/oprspedia"
-
     settings:
-      port: !vault |
-        $ANSIBLE_VAULT;1.1;AES256
-        38623666306461356263613961663034623662366361303931353837656137633132363533306335
-        3630366236653434353633306337346161663366393331350a656366646539616461646638623030
-        36333633613766633330343934633262626132303139653533663535353930663138393866396433
-        3133316439633935340a343837323431316335303666616165366336396630376532333639636138
-        3764
+      port:
+        127.0.0.1
+      ip:
+        4567
 
-      ip: !vault |
-        $ANSIBLE_VAULT;1.1;AES256
-        36623262616161626533663438393532303165663331323638633531633237393337653437313537
-        3665306130303634653465383834633439303739303262660a396237383933343563323465336332
-        33646232363965646534343233383639663032316566336664653766363639326566326231353435
-        3831353462346636360a376665313463376362656466396566376331613432323162626335373761
-        3333
-      pidfile:
-        "{{ local_var_dir }}/oprspedia.pid"
-      logfile:
-        "{{ local_var_dir }}/oprspedia.log"
-
-    user_service_dir:
-      "{{ user_home }}/.config/systemd/user"
-    service_file:
-      oprspedia.service
+    user_service:
+      name:
+        oprspedia
+      description:
+        Oprspedia via Sinatra and Thin
+      exec:
+        /usr/bin/thin -R {{ source.path }}/src/oprspedia.ru -C {{ config_file }} start
 
   roles:
     - packages
     - clone
+    - systemd_user_service
 
   post_tasks:
-    - name:
-        Initialize user directories
-      file:
-        path:
-          "{{ item }}"
-        state:
-          directory
-      with_items:
-        - "{{ user_service_dir }}"
-        - "{{ local_var_dir }}"
-      tags:
-        service
-
-    - name:
-        Fill in user service template
-      template:
-        src:
-          oprspedia.service.j2
-        dest:
-          "{{ user_service_dir }}/{{ service_file }}"
-      tags:
-        service
-
     - name:
         Fill in config file
       template:
         src:
           config.yaml.j2
         dest:
-          "{{ local_var_dir }}/config.yaml"
-      tags:
-        service
 
     - name:
         (Re)start Oprspedia service
       systemd:
         name:
-          "{{ service_file }}"
+          "{{ user_service.name }}"
         daemon_reload:
           yes
         state:
@@ -97,3 +60,8 @@
           yes
       tags:
         service
+
+- import_playbook:
+    oprs_certificate.yaml
+  tags:
+    certbot, haproxy
