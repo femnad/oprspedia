@@ -26,20 +26,35 @@
       port:
         4567
 
-    user_service:
-      name:
-        oprspedia
-      description:
-        Oprspedia via Sinatra and Thin
-      exec:
-        /usr/bin/thin -R {{ source.path }}/src/oprspedia.ru -C {{ config_file }} start
+    certbot_standalone:
+      domains:
+        - oprspedia.org
+        - en.m.oprspedia.org
+        - en.oprspedia.org
+        - upload.oprspedia.org
+      agree_tos:
+        yes
+      email: !vault |
+        $ANSIBLE_VAULT;1.1;AES256
+        64393336646337373131613961616365326665633831613733303439303134353865323164626330
+        6564393236613564303931373463613431643665316561630a353136393532343137636666626232
+        33316666373266663463313665633330326434363632346166393266353163333230613934393934
+        3337646261306266310a373636393632613932643864336532636664613439326161393439373135
+        38616131623735396432613065666638396465313131633431616166623631326434
 
-  roles:
-    - packages
-    - clone
-    - systemd_user_service
+    haproxy_config:
+      base_domain:
+        oprspedia.org
+      ip:
+        127.0.0.1
+      backend_server:
+        127.0.0.1:4567
 
-  post_tasks:
+    run_if_not_running:
+      command:
+        thin -R {{ source.path }}/src/oprspedia.ru -C {{ config_file }} -d start
+
+  pre_tasks:
     - name:
         Fill in config file
       template:
@@ -48,26 +63,9 @@
         dest:
           "{{ config_file }}"
 
-    - name:
-        (Re)start Oprspedia service
-      systemd:
-        name:
-          "{{ user_service.name }}"
-        daemon_reload:
-          yes
-        state:
-          restarted
-        user:
-          yes
-      tags:
-        service
-
-- import_playbook:
-    generate_certificates.yaml
-  tags:
-    certbot
-
-- import_playbook:
-    configure_haproxy.yaml
-  tags:
-    haproxy
+  roles:
+    - packages
+    - clone
+    - certbot_standalone
+    - haproxy_config
+    - run_if_not_running

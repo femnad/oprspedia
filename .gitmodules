@@ -1,9 +1,0 @@
-[submodule "playbook/roles"]
-	path = playbook/roles
-	url = https://github.com/femnad/roles.git
-[submodule "playbook/vars"]
-	path = playbook/vars
-	url = https://github.com/femnad/vars.git
-[submodule "playbook/group_vars"]
-	path = playbook/group_vars
-	url = https://@github.com/femnad/group_vars.git
