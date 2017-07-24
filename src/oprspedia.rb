@@ -99,6 +99,11 @@ def get_search_response(query_string)
   get_uri_content("#{SEARCH_URL}?#{query_string}")
 end
 
+def get_extension(file_name)
+    last_dot_index = file_name.rindex('.')
+    file_name.slice(last_dot_index..-1).downcase
+end
+
 get '/' do
   redirect to(MAIN_PAGE_SUFFIX)
 end
@@ -131,7 +136,10 @@ get '/static/images/*/:image_file' do
 end
 
 get '/wikipedia/*' do
-  path = params['captures'].join('/')
+  captures = params['captures']
+  extension = get_extension(captures.last)
+  content_type "image/#{extension}"
+  path = captures.join('/')
   get_wikimedia_content(path)
 end
 

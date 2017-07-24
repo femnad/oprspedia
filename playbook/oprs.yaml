@@ -53,6 +53,8 @@
     run_if_not_running:
       command:
         thin -R {{ source.path }}/src/oprspedia.ru -C {{ config_file }} -d start
+      restart:
+        yes
 
   pre_tasks:
     - name:
