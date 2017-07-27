@@ -1,0 +1,7 @@
+- name:
+    Fill in config file
+  template:
+    src:
+      config.yaml.j2
+    dest:
+      "{{ config_file }}"

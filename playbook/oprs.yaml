@@ -1,6 +1,6 @@
 ---
 - hosts:
-    rhodium
+    iridium
 
   name: Install oprspedia
 
@@ -24,7 +24,7 @@
       ip:
         127.0.0.1
       port:
-        4567
+        8765
 
     certbot_standalone:
       domains:
@@ -45,10 +45,22 @@
     haproxy_config:
       base_domain:
         oprspedia.org
-      ip:
-        127.0.0.1
+      ip: !vault |
+        $ANSIBLE_VAULT;1.1;AES256
+        63353731626233396535613330623232353737646563316635343462303430356663636230383639
+        3163386264353766336137623864363463346161363736640a396635666437626433653264633438
+        32666265363237656330656261396132356662326665626264663263333165356561626534653534
+        3531656566303166650a646361393234646135643237326533313463626330613630316335393130
+        6438
       backend_server:
-        127.0.0.1:4567
+        "{{ settings.ip }}:{{ settings.port }}"
+      backend:
+        oprs-backend
+      frontend:
+        http:
+          oprs-http
+        https:
+          oprs-https
 
     run_if_not_running:
       command:
@@ -56,18 +68,10 @@
       restart:
         yes
 
-  pre_tasks:
-    - name:
-        Fill in config file
-      template:
-        src:
-          config.yaml.j2
-        dest:
-          "{{ config_file }}"
-
   roles:
     - packages
     - clone
+    - configure_rackup
     - certbot_standalone
     - haproxy_config
     - run_if_not_running
