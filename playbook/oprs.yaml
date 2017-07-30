@@ -62,16 +62,22 @@
         https:
           oprs-https
 
-    run_if_not_running:
-      command:
-        thin -R {{ source.path }}/src/oprspedia.ru -C {{ config_file }} -d start
-      restart:
-        yes
+    user_service:
+      description:
+        Oprspedia!
+      name:
+        oprspedia
+      exec:
+        /usr/bin/thin -R {{ source.path }}/src/oprspedia.ru -C {{ config_file }} start
+      unit_file:
+        service:
+          - Restart:
+              always
 
   roles:
     - packages
     - clone
     - configure_rackup
+    - systemd_user_service
     - certbot_standalone
     - haproxy_config
-    - run_if_not_running
