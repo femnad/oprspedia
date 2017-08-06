@@ -104,13 +104,17 @@ def get_extension(file_name)
     file_name.slice(last_dot_index..-1).downcase
 end
 
+def get_captured_path(params)
+  params['captures'].join('/')
+end
+
 get '/' do
   redirect to(MAIN_PAGE_SUFFIX)
 end
 
-get '/wiki/:article' do
-  article_name = params['article']
-  erb get_article_content(article_name)
+get '/wiki/*' do
+  captured_path = get_captured_path(params)
+  erb get_article_content(captured_path)
 end
 
 get '/static/favicon/:icon_file' do

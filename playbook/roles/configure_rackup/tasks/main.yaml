@@ -5,3 +5,5 @@
       config.yaml.j2
     dest:
       "{{ config_file }}"
+  tags:
+    rackup
