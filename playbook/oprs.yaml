@@ -76,3 +76,16 @@
     - systemd_user_service
     - certbot_standalone
     - haproxy_config
+
+  post_tasks:
+    - name:
+        Restart user service
+      systemd:
+        name:
+          "{{ user_service.name }}"
+        state:
+          restarted
+        user:
+          yes
+      tags:
+        clone,rackup,systemd-user-service
